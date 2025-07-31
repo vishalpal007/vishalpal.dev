@@ -29,7 +29,7 @@ const Navbar = () => {
         <div className={`py-4 fixed top-0 w-full z-10 ${isScrolled ? 'bg-slate-100 shadow-md' : 'p-4'}`}>
             <div className="container mx-auto flex items-center justify-between">
                 <div className="flex items-center">
-                    <Link to="/" className="text-2xl font-serif font-bold">Vishal.</Link>
+                    <Link to="/" className="text-2xl font-serif font-bold text-black">Vishal.</Link>
                 </div>
 
                 <div className="hidden lg:flex space-x-4 gap-8">
