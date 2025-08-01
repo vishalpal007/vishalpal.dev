@@ -1,156 +1,228 @@
-import React, { useEffect, useState } from 'react';
-import { Link as RouterLink, animateScroll } from 'react-scroll';
-import { FaInstagram, FaGithub, FaLinkedin } from 'react-icons/fa6';
-import { PiListBold } from 'react-icons/pi';
+// src/component/Navbar.jsx
+import React, { useState, useRef, useEffect } from 'react';
+import { Link as RouterLink } from 'react-scroll';
+import { FaInstagram, FaGithub, FaLinkedin, FaX, FaSun, FaMoon } from 'react-icons/fa6';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 
 const Navbar = () => {
-    const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [darkMode, setDarkMode] = useState(true);
+    const [scrolled, setScrolled] = useState(false);
+    const navRef = useRef(null);
+
+    const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+    const toggleDarkMode = () => setDarkMode(!darkMode);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (navRef.current && !navRef.current.contains(event.target)) {
+                setIsMobileMenuOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
-            const scrollPosition = window.scrollY;
-            setIsScrolled(scrollPosition > 0);
+            setScrolled(window.scrollY > 10);
         };
-
         window.addEventListener('scroll', handleScroll);
-
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
+        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
-    const toggleMobileMenu = () => {
-        setIsMobileMenuOpen(!isMobileMenuOpen);
-    };
+    const navLinks = [
+        { id: 'home', label: 'Home' },
+        { id: 'about', label: 'About' },
+        { id: 'project', label: 'Projects' },
+        { id: 'contact', label: 'Contact' },
+    ];
+
+    const socialLinks = [
+        { icon: <FaInstagram />, url: 'https://www.instagram.com/vishalpal_18' },
+        { icon: <FaGithub />, url: 'https://github.com/vishalpal007' },
+        { icon: <FaLinkedin />, url: 'https://www.linkedin.com/in/vishalpal07' },
+    ];
 
     return (
-        <div className={`py-4 fixed top-0 w-full z-10 ${isScrolled ? 'bg-slate-100 shadow-md' : 'p-4'}`}>
-            <div className="container mx-auto flex items-center justify-between">
-                <div className="flex items-center">
-                    <Link to="/" className="text-2xl font-serif font-bold text-black">Vishal.</Link>
-                </div>
-
-                <div className="hidden lg:flex space-x-4 gap-8">
-                    <RouterLink
-                        to="home"
-                        smooth={true}
-                        duration={800}
-                        className="font-semibold hover:text-orange-400 cursor-pointer"
+        <motion.div
+            ref={navRef}
+            initial={{ y: -100 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5 }}
+            className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
+                ? 'bg-gradient-to-r from-gray-800/90 to-gray-900/90 backdrop-blur-md shadow-xl py-2'
+                : 'bg-gradient-to-r from-gray-800/40 to-gray-900/70 backdrop-blur-sm py-3'
+                }`}
+            style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+        >
+            <div className="container mx-auto px-4 flex items-center justify-between">
+                {/* Logo */}
+                <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="flex items-center"
+                >
+                    {/* Animated Logo */}
+                    <motion.div
+                        animate={{
+                            rotate: [0, 10, -10, 0],
+                            scale: [1, 1.05, 1]
+                        }}
+                        transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            repeatType: "reverse"
+                        }}
+                        className="relative"
                     >
-                        Home
-                    </RouterLink>
-                    <RouterLink
-                        to="about"
-                        smooth={true}
-                        duration={800}
-                        className="font-semibold hover:text-orange-400 cursor-pointer"
-                    >
-                        About
-                    </RouterLink>
-                    <RouterLink
-                        to="skills"
-                        smooth={true}
-                        duration={800}
-                        className="font-semibold hover:text-orange-400 cursor-pointer"
-                    >
-                        Skills
-                    </RouterLink>
-                    <RouterLink
-                        to="project"
-                        smooth={true}
-                        duration={800}
-                        className="font-semibold hover:text-orange-400 cursor-pointer"
-                    >
-                        Project
-                    </RouterLink>
-                    <RouterLink
-                        to="contact"
-                        smooth={true}
-                        duration={800}
-                        className="font-semibold hover:text-orange-400 cursor-pointer"
-                    >
-                        Contact
-                    </RouterLink>
-                </div>
-
-
-                <div className='flex space-x-4'>
-                    <div className="flex lg:flex space-x-4 items-center">
-                        <a href='https://www.instagram.com/vishu_9x._/' target='_blank' className={`social-link ${isScrolled ? 'text-orange-400' : 'bg-opacity-5'}`}>
-                            <FaInstagram />
-                        </a>
-                        <a href='https://github.com/vishalpal007' target='_blank' className={`social-link ${isScrolled ? 'text-orange-400' : 'bg-opacity-5'}`}>
-                            <FaGithub />
-                        </a>
-                        <a href='https://www.linkedin.com/in/vishal-pal-913094250/' target='_blank' className={`social-link ${isScrolled ? 'text-orange-400' : 'bg-opacity-5'}`}>
-                            <FaLinkedin />
-                        </a>
-                    </div>
-
-                    <div className="lg:hidden flex items-center">
-                        <div className="text-xl cursor-pointer" onClick={toggleMobileMenu}>
-                            <PiListBold />
+                        <div className="bg-gradient-to-r from-cyan-500 to-blue-600 w-12 h-12 rounded-full flex items-center justify-center shadow-lg">
+                            <span className="text-white font-bold text-lg">&lt;/&gt;</span>
                         </div>
+                        <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-gradient-to-r from-orange-400 to-amber-500 border-2 border-gray-900"></div>
+                    </motion.div>
+
+                    {/* Brand Name + Tagline */}
+                    <Link to="/" className="flex flex-col leading-tight ml-3">
+                        <span className="text-2xl font-bold tracking-wide text-slate-100">
+                            Vishal<span className="text-cyan-400">.Dev</span>
+                        </span>
+                        <span className="text-[12px] text-slate-400 tracking-wider font-medium">
+                            Full Stack Developer
+                        </span>
+                    </Link>
+                </motion.div>
+
+                {/* Desktop Nav */}
+                <div className="hidden lg:flex items-center space-x-10">
+                    {navLinks.map((link) => (
+                        <motion.div
+                            key={link.id}
+                            whileHover={{ y: -2 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="relative"
+                        >
+                            <RouterLink
+                                to={link.id}
+                                smooth={true}
+                                duration={800}
+                                spy={true}
+                                activeClass="text-cyan-400"
+                                className="relative font-medium text-slate-300 hover:text-cyan-300 cursor-pointer transition-colors py-2"
+                            >
+                                {link.label}
+                                <motion.div
+                                    className="absolute bottom-0 left-0 w-full h-0.5 bg-cyan-500 rounded-full"
+                                    initial={{ scaleX: 0 }}
+                                    animate={{ scaleX: 1 }}
+                                    transition={{ duration: 0.3 }}
+                                    style={{ originX: 0 }}
+                                />
+                            </RouterLink>
+                        </motion.div>
+                    ))}
+                </div>
+
+                {/* Right Side Controls */}
+                <div className="flex items-center space-x-5">
+                    {/* Social Icons (Desktop) */}
+                    <div className="hidden lg:flex items-center space-x-5">
+                        {socialLinks.map((social, index) => (
+                            <motion.a
+                                key={index}
+                                href={social.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                whileHover={{ y: -3, color: '#38bdf8', scale: 1.2 }}
+                                whileTap={{ scale: 0.9 }}
+                                className="text-slate-400 hover:text-cyan-300 transition-colors"
+                            >
+                                {social.icon}
+                            </motion.a>
+                        ))}
                     </div>
 
+
+
+                    {/* Mobile Menu Button */}
+                    <motion.div className="lg:hidden z-50" whileTap={{ scale: 0.9 }}>
+                        <button
+                            onClick={toggleMobileMenu}
+                            className={`p-2 rounded-md ${isMobileMenuOpen
+                                ? 'bg-cyan-600 text-white'
+                                : 'bg-gray-700/50 text-slate-300'
+                                }`}
+                        >
+                            {isMobileMenuOpen ? (
+                                <FaX className="text-xl" />
+                            ) : (
+                                <div className="space-y-1">
+                                    <span className="block w-6 h-0.5 bg-slate-300"></span>
+                                    <span className="block w-6 h-0.5 bg-slate-300"></span>
+                                    <span className="block w-4 h-0.5 bg-slate-300"></span>
+                                </div>
+                            )}
+                        </button>
+                    </motion.div>
+                </div>
+
+                {/* Mobile Menu */}
+                <AnimatePresence>
                     {isMobileMenuOpen && (
-                        <div className="lg:hidden fixed top-16 left-0 w-full bg-white shadow-md p-4">
-                            <div className="flex flex-col items-center space-y-4">
-                                <RouterLink
-                                    to="home"
-                                    smooth={true}
-                                    duration={800}
-                                    className="font-semibold hover:text-orange-400 cursor-pointer"
-                                    onClick={toggleMobileMenu}
+                        <motion.div
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            transition={{ duration: 0.3 }}
+                            className="lg:hidden fixed inset-0 bg-gradient-to-br from-gray-800 to-gray-900 z-40 pt-20"
+                        >
+                            <div className="container mx-auto px-4">
+                                <div className="flex flex-col space-y-6 py-6">
+                                    {navLinks.map((link) => (
+                                        <RouterLink
+                                            key={link.id}
+                                            to={link.id}
+                                            smooth={true}
+                                            duration={800}
+                                            spy={true}
+                                            activeClass="text-cyan-400 font-semibold"
+                                            className="block text-xl font-medium text-slate-300 hover:text-cyan-300 py-3 transition-colors border-b border-gray-700"
+                                            onClick={toggleMobileMenu}
+                                        >
+                                            {link.label}
+                                        </RouterLink>
+                                    ))}
+                                </div>
+
+                                {/* Social Icons (Mobile) */}
+                                <motion.div
+                                    className="flex justify-center space-x-8 py-8 mt-4"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.6 }}
                                 >
-                                    Home
-                                </RouterLink>
-                                <RouterLink
-                                    to="about"
-                                    smooth={true}
-                                    duration={800}
-                                    className="font-semibold hover:text-orange-400 cursor-pointer"
-                                    onClick={toggleMobileMenu}
-                                >
-                                    About
-                                </RouterLink>
-                                <RouterLink
-                                    to="skills"
-                                    smooth={true}
-                                    duration={800}
-                                    className="font-semibold hover:text-orange-400 cursor-pointer"
-                                    onClick={toggleMobileMenu}
-                                >
-                                    Skills
-                                </RouterLink>
-                                <RouterLink
-                                    to="project"
-                                    smooth={true}
-                                    duration={800}
-                                    className="font-semibold hover:text-orange-400 cursor-pointer"
-                                    onClick={toggleMobileMenu}
-                                >
-                                    Project
-                                </RouterLink>
-                                <RouterLink
-                                    to="contact"
-                                    smooth={true}
-                                    duration={800}
-                                    className="font-semibold hover:text-orange-400 cursor-pointer"
-                                    onClick={toggleMobileMenu}
-                                >
-                                    Contact
-                                </RouterLink>
+                                    {socialLinks.map((social, index) => (
+                                        <motion.a
+                                            key={index}
+                                            href={social.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            whileHover={{ y: -3, color: '#38bdf8', scale: 1.2 }}
+                                            whileTap={{ scale: 0.9 }}
+                                            className="text-2xl text-slate-400 hover:text-cyan-300 transition-colors"
+                                        >
+                                            {social.icon}
+                                        </motion.a>
+                                    ))}
+                                </motion.div>
+
                             </div>
-                        </div>
+                        </motion.div>
                     )}
-                </div>
-
-
+                </AnimatePresence>
             </div>
-        </div>
+        </motion.div>
     );
 };
 

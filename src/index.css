@@ -1,56 +1,107 @@
+/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: #fefaf3;
-    /* Light cream background */
-    --foreground: #1a1a1a;
+    --background: #f8fafc;
+    /* Light background */
+    --foreground: #0f172a;
     /* Dark text color */
 
     --card: #ffffff;
-    --card-foreground: #1a1a1a;
+    --card-foreground: #0f172a;
 
     --popover: #ffffff;
-    --popover-foreground: #1a1a1a;
+    --popover-foreground: #0f172a;
 
-    --primary: #1e3a8a;
-    /* Deep blue */
+    --primary: #2563eb;
+    /* Professional blue */
     --primary-foreground: #ffffff;
 
-    --secondary: #f3f4f6;
-    /* Light gray */
-    --secondary-foreground: #1a1a1a;
+    --secondary: #f1f5f9;
+    --secondary-foreground: #0f172a;
 
-    --muted: #f3f4f6;
-    --muted-foreground: #6b7280;
-    /* Muted text gray */
+    --muted: #f1f5f9;
+    --muted-foreground: #64748b;
 
-    --accent: #f3f4f6;
-    --accent-foreground: #1a1a1a;
+    --accent: #e2e8f0;
+    --accent-foreground: #0f172a;
 
     --destructive: #ef4444;
-    /* Red */
     --destructive-foreground: #ffffff;
 
-    --border: #e5e7eb;
-    --input: #e5e7eb;
-    --ring: #1a1a1a;
+    --border: #e2e8f0;
+    --input: #e2e8f0;
+    --ring: #2563eb;
 
     --radius: 0.5rem;
   }
+}
 
-  /* Apply background and text */
-  body {
-    @apply bg-background text-foreground;
-    background-color: var(--background);
-    color: var(--foreground);
-  }
-
-  /* Border color for all elements */
+@layer base {
   * {
     @apply border-border;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Animation for active nav links */
+.active {
+  position: relative;
+}
+
+.active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #2563eb;
+  animation: activeLink 0.3s ease-out;
+}
+
+@keyframes activeLink {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+/* Professional logo styling */
+.logo-gradient {
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
 }
